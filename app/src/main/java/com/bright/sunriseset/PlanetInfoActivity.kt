@@ -55,7 +55,7 @@ class PlanetInfoActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.languageSwicth.isChecked = isChineseLocale()
+        binding.languageSwitch.isChecked = isChineseLocale()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         if (checkLocationPermission()) {
             getLastLocation()
@@ -66,10 +66,10 @@ class PlanetInfoActivity : AppCompatActivity() {
         // Get the current time
         val currentTime = LocalDateTime.now()
 
-        if (!isSwitchChangingLocale) {
-            fetchSunriseSunSetTimes(resources.configuration.locale.language)
-        }
-        binding.languageSwicth.setOnCheckedChangeListener { buttonView, isChecked ->
+        updateSwitchText(resources.configuration.locale)
+        fetchSunriseSunSetTimes(resources.configuration.locale.language)
+
+        binding.languageSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
 
             if (!isSwitchChangingLocale) {
                 updateLocale(isChecked)
@@ -80,6 +80,14 @@ class PlanetInfoActivity : AppCompatActivity() {
     private fun isChineseLocale(): Boolean {
         val currentLocale = resources.configuration.locale
         return currentLocale.language == chineseLanguageCode
+    }
+
+    private fun updateSwitchText(locale: Locale){
+        if(locale == Locale.CHINA){
+            binding.languageSwitch.text = "Switch to English"
+        } else {
+            binding.languageSwitch.text = "Switch to Chinese"
+        }
     }
 
     private fun updateLocale(isChinese: Boolean) {
